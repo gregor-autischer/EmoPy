@@ -21,7 +21,7 @@ setuptools.setup(
     python_requires='>=3.6.3',
     install_requires=[
         'h5py==2.10.0',
-        'keras==2.0.6',
+        'keras==2.1.2',
         'coverage==4.5.3',
         'lasagne',
         'graphviz',
