@@ -1,9 +1,29 @@
+# gregor: does not show worings when importing keras
+import warnings
+warnings.filterwarnings('ignore', category=FutureWarning)
+warnings.filterwarnings('ignore', category=DeprecationWarning)
+
 from keras.models import load_model
 import cv2
 from scipy import misc
 import numpy as np
 import json
 from pkg_resources import resource_filename
+
+# gregor
+#from tensorflow.keras.losses import cosine_similarity
+import matplotlib.pyplot as plt
+import tensorflow as tf
+
+# gregor
+#def cosine_proximity(y_true, y_pred):
+#    return -cosine_similarity(y_true, y_pred)
+
+#gregor
+def cosine_proximity(y_true, y_pred):
+    y_true = tf.linalg.l2_normalize(y_true, axis=-1)
+    y_pred = tf.linalg.l2_normalize(y_pred, axis=-1)
+    return -tf.reduce_sum(y_true * y_pred, axis=-1)
 
 class FERModel:
     """
@@ -50,7 +70,7 @@ class FERModel:
 
         :param images: image file (jpg or png format)
         """
-        image = misc.imread(image_file)
+        image = plt.imread(image_file) #gregor: plt instead of misc
         return self.predict_from_ndarray(image)
 
     def predict_from_ndarray(self, image_array):
@@ -109,6 +129,10 @@ class FERModel:
             model_file = 'models/conv_model_%s.hdf5' % model_suffix
         emotion_map_file = 'models/conv_emotion_map_%s.json' % model_suffix
         emotion_map = json.loads(open(resource_filename('EmoPy', emotion_map_file)).read())
+
+        #custom_objects = {'cosine_proximity': cosine_proximity}
+        #, custom_objects=custom_objects
+        
         return load_model(resource_filename('EmoPy', model_file)), emotion_map
 
     def _print_prediction(self, prediction):
