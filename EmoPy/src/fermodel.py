@@ -10,6 +10,9 @@ import numpy as np
 import json
 from pkg_resources import resource_filename
 
+# gregor
+import matplotlib.pyplot as plt
+
 class FERModel:
     """
     Pretrained deep learning model for facial expression recognition.
